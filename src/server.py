@@ -24,3 +24,6 @@ def only_api():
 
 if __name__ == "__main__":
     cli()
+
+
+# REST версия
