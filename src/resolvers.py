@@ -43,6 +43,13 @@ async def get_user(info, user_id: int) -> User:
         return result
 
 
+async def get_student_data(info, user_id: int) -> User:
+    async with get_session() as session:
+        query = select(StudentData).where(StudentData.user_id == user_id)
+        result = (await session.execute(query)).scalars().first()
+        return result
+
+
 async def add_user(surname: str, name: str, middle_name: str, snils: str, inn: str,
                    email: str, phone: str, study_year: int) -> User:
     async with get_session() as session:
@@ -58,10 +65,3 @@ async def add_user(surname: str, name: str, middle_name: str, snils: str, inn: s
         session.add(new_user)
         await session.commit()
         return new_user
-
-
-async def get_student_data(info, user_id: int) -> StudentData:
-    async with get_session() as session:
-        query = select(StudentData).where(StudentData.user_id == user_id)
-        result = (await session.execute(query)).scalars().first()
-        return result

@@ -2,10 +2,9 @@ from datetime import date
 
 import strawberry
 from pydantic import typing
-from strawberry.dataloader import DataLoader
 from strawberry.types import Info
 import db.models as models
-from src.resolvers import get_group
+from src.resolvers import get_group, get_student_data
 
 
 @strawberry.type
@@ -35,6 +34,11 @@ class User:
     phone: typing.Optional[str]
     study_year: int
 
+    @strawberry.field
+    async def student_data(self, info: Info) -> "StudentData":
+        s_data = await get_student_data(info, self.id)
+        return StudentData.marshal(s_data)
+
     @classmethod
     def marshal(cls, model: models.User) -> "User":
         return cls(
@@ -57,10 +61,9 @@ class StudentData:
     user_id: int
     degree_doc: str
     graduation_date: typing.Optional[date]
-    # group: Group = strawberry.field(resolver=get_group)
 
     @strawberry.field
-    async def group(self, info: Info) -> Group:
+    async def group(self, info: Info) -> "Group":
         student_group = await get_group(info, self.group_id)
         return Group.marshal(student_group)
 
