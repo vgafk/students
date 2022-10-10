@@ -62,7 +62,6 @@ class StudentData:
     @strawberry.field
     async def group(self, info: Info) -> Group:
         student_group = await get_group(info, self.group_id)
-        # return Group.marshal(models.Group(id=4, name='name', full_name='full_name'))
         return Group.marshal(student_group)
 
     @classmethod
@@ -74,9 +73,3 @@ class StudentData:
             degree_doc=model.degree_doc,
             graduation_date=model.graduation_date
         )
-
-
-async def get_context() -> dict:
-    return {
-        "get_group": DataLoader(load_fn=get_group),
-    }
