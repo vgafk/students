@@ -2,31 +2,23 @@ import typing
 
 from sqlalchemy import select
 from src.db.base import get_session
-from src.db.models import Group, User
+from src.db.models import Group, User, StudentData
 from src.helper import get_valid_data
+from loguru import logger
 
 
 async def get_all_groups(info) -> typing.List[Group]:
     async with get_session() as session:
         query = select(Group).order_by(Group.name)
         result = (await session.execute(query)).scalars().all()
-
-    groups_data_list = []
-
-    for group in result:
-        group_dict = get_valid_data(group, Group)
-        groups_data_list.append(Group(**group_dict))
-
-    return groups_data_list
+    return result
 
 
 async def get_group(info, group_id: int) -> Group:
     async with get_session() as session:
         query = select(Group).where(Group.id == group_id)
         result = (await session.execute(query)).scalars().first()
-        group_dict = get_valid_data(result, Group)
-        group = Group(**group_dict)
-        return group
+        return result
 
 
 async def add_group(name: str, full_name: str):
@@ -41,23 +33,14 @@ async def get_all_users(info) -> typing.List[User]:
     async with get_session() as session:
         query = select(User).order_by(User.name)
         result = (await session.execute(query)).scalars().all()
-
-    user_data_list = []
-
-    for user in result:
-        user_dict = get_valid_data(user, User)
-        user_data_list.append(User(**user_dict))
-
-    return user_data_list
+        return result
 
 
 async def get_user(info, user_id: int) -> User:
     async with get_session() as session:
         query = select(User).where(User.id == user_id)
         result = (await session.execute(query)).scalars().first()
-        user_dict = get_valid_data(result, User)
-        user = User(**user_dict)
-        return user
+        return result
 
 
 async def add_user(surname: str, name: str, middle_name: str, snils: str, inn: str,
@@ -75,3 +58,10 @@ async def add_user(surname: str, name: str, middle_name: str, snils: str, inn: s
         session.add(new_user)
         await session.commit()
         return new_user
+
+
+async def get_student_data(info, user_id: int) -> StudentData:
+    async with get_session() as session:
+        query = select(StudentData).where(StudentData.user_id == user_id)
+        result = (await session.execute(query)).scalars().first()
+        return result
