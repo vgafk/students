@@ -1,0 +1,2 @@
+class AbsentConnectionError(Exception):
+    pass

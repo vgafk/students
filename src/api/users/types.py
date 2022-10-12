@@ -1,12 +1,11 @@
-import datetime
-
 import strawberry
-from pydantic import typing
+from typing import List, Optional
 
 from db import models
 from api.student_data.types import StudentData
 from api.student_data.query import StudentDataQuery
-from db.resolvers import get_absents
+from api.absents.types import Absents
+from api.absents.query import AbsentQuery
 
 
 @strawberry.type
@@ -14,11 +13,11 @@ class User:
     id: int
     surname: str
     name: str
-    middle_name: typing.Optional[str]
-    snils: typing.Optional[str]
-    inn: typing.Optional[str]
-    email: typing.Optional[str]
-    phone: typing.Optional[str]
+    middle_name: Optional[str]
+    snils: Optional[str]
+    inn: Optional[str]
+    email: Optional[str]
+    phone: Optional[str]
     study_year: int
 
     @strawberry.field
@@ -26,9 +25,8 @@ class User:
         return await StudentDataQuery().student_data(user_id=self.id)
 
     @strawberry.field
-    async def absents(self) -> typing.List["Absents"]:
-        absents = await get_absents(self.id)
-        return [Absents.marshal(absent) for absent in absents]
+    async def absents(self) -> List["Absents"]:
+        return AbsentQuery().absent(user_id=self.id)
 
     @classmethod
     def marshal(cls, model: models.User) -> "User":
@@ -42,22 +40,6 @@ class User:
             email=model.email,
             phone=model.phone,
             study_year=model.study_year
-        )
-
-
-@strawberry.type
-class Absents:
-    id: int
-    # user_id = Column(ForeignKey("users.id"))
-    date: datetime.date
-    class_number: int
-
-    @classmethod
-    def marshal(cls, model: models.Absenteeism) -> "Absents":
-        return cls(
-            id=model.id,
-            date=model.date,
-            class_number=model.class_number
         )
 
 

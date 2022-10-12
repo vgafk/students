@@ -1,6 +1,6 @@
 import strawberry
 from .types import StudentData
-from db.resolvers import get_student_data
+from db.query_resolvers import get_student_data
 
 
 @strawberry.type

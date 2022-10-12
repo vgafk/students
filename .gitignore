@@ -132,7 +132,10 @@ dmypy.json
 .idea
 
 # database
-src/*.db
+*.db
 
 # Environment variables
 .env
+
+# temp folder
+tmp/

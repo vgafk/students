@@ -15,7 +15,6 @@ class User(Base):
     phone = Column(String(length=15), nullable=True)
     study_year = Column(Integer, nullable=False)
     student_data = relationship('StudentData', backref='user')
-    absenteeism = relationship('Absenteeism', backref='user')
 
 
 class Group(Base):
@@ -23,6 +22,7 @@ class Group(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     name = Column(String(length=20), nullable=False, unique=True)
     full_name = Column(String(length=255), nullable=True)
+    faculty_id = Column(Integer, nullable=False)
     student_data = relationship('StudentData', backref='group')
 
 
@@ -31,13 +31,5 @@ class StudentData(Base):
     id = Column(Integer, autoincrement=True, primary_key=True, index=True)
     user_id = Column(ForeignKey("users.id"))
     group_id = Column(ForeignKey("groups.id"))
-    degree_doc = Column(String(), nullable=False)
+    degree_doc = Column(String())
     graduation_date = Column(Date, nullable=True)
-
-
-class Absenteeism(Base):
-    __tablename__ = 'absenteeism'
-    id = Column(Integer, autoincrement=True, primary_key=True, index=True)
-    user_id = Column(ForeignKey("users.id"))
-    date = Column(DateTime)
-    class_number = Column(Integer)

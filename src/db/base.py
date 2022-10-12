@@ -25,7 +25,7 @@ async def init_models():
 async def get_session() -> AsyncGenerator[AsyncSession, None]:
     async with async_session() as session:
         async with session.begin():
-            try:
+            # try:
                 yield session
-            finally:
-                await session.close()
+            # finally:
+                # await session.close()

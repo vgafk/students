@@ -2,6 +2,6 @@ version: '3.9'
 services:
    students:
        build: .
-       command: uvicorn server:app  --host 0.0.0.0 --port 8001
+       command: uvicorn server:app  --host 0.0.0.0 --port 11800
        ports:
-           - "8001:8001"
+           - "11800:11800"

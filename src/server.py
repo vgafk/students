@@ -4,8 +4,9 @@ from strawberry.fastapi import GraphQLRouter
 from strawberry.schema.config import StrawberryConfig
 
 from api.query import Query
-# from db.models import init_models
-# import asyncio
+from db import init_models
+from files import file_router
+import asyncio
 
 
 app = FastAPI()
@@ -15,3 +16,8 @@ schema = strawberry.Schema(query=Query, #mutation=Mutation,
 
 graphql_app = GraphQLRouter(schema)
 app.include_router(graphql_app, prefix="/graphql")
+app.include_router(file_router, prefix="/files")
+
+
+if __name__ == '__main__':
+    asyncio.run(init_models())

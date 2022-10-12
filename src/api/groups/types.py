@@ -9,11 +9,13 @@ class Group:
     id: typing.Optional[int]
     name: str
     full_name: typing.Optional[str]
+    faculty_id: int
 
     @classmethod
     def marshal(cls, model: models.Group) -> "Group":
         return cls(
-            id=strawberry.ID(str(model.id)),
+            id=model.id,
             name=model.name,
-            full_name=model.full_name
+            full_name=model.full_name,
+            faculty_id=model.faculty_id
         )
